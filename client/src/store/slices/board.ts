@@ -1,26 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getBoards } from '../asyncAction/boards'
-
-interface State {
-	boards: IBoards[]
-	status: 'init' | 'loading' | 'error' | 'success'
-}
-
-export interface IBoards {
-	_id: string
-	name: string
-	createdAt: string
-	updatedAt: string
-	tasks: ITasks[]
-}
-
-export interface ITasks {
-	_id: string
-	board: string
-	createdAt: string
-	name: string
-	updatedAt: string
-}
+import { FetchGetBoards } from '../asyncAction/boards'
+import { State } from '../types'
 
 const initialState: State = {
 	boards: [],
@@ -30,17 +10,47 @@ const initialState: State = {
 const BoardSlice = createSlice({
 	name: 'boards',
 	initialState,
-	reducers: {},
+	reducers: {
+		addBoard(state, action) {
+			state.boards.push(action.payload)
+		},
+		deleteBoard(state, action) {
+			state.boards = state.boards.filter(
+				element => element._id !== action.payload
+			)
+		},
+		addTask(state, action) {
+			const findBoard = state.boards.find(
+				element => element._id === action.payload.board
+			)
+
+			findBoard?.tasks.push(action.payload)
+		},
+		deleteTask(state, action) {
+			const findBoard = state.boards.find(
+				element => element._id === action.payload.board
+			)
+
+			findBoard?.tasks.splice(
+				findBoard?.tasks.findIndex(
+					element => element._id === action.payload._id
+				),
+				1
+			)
+		},
+	},
 	extraReducers: builder => {
 		builder
-			.addCase(getBoards.pending, state => {
+
+			//Fetch get all boards
+			.addCase(FetchGetBoards.pending, state => {
 				state.status = 'loading'
 			})
-			.addCase(getBoards.fulfilled, (state, action) => {
+			.addCase(FetchGetBoards.fulfilled, (state, action) => {
 				state.status = 'success'
 				state.boards = action.payload
 			})
-			.addCase(getBoards.rejected, state => {
+			.addCase(FetchGetBoards.rejected, state => {
 				state.status = 'error'
 			})
 	},
