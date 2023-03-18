@@ -1,20 +1,21 @@
 const express = require('express')
 const morgan = require('morgan')
-
 const mongoose = require('mongoose')
 const cors = require('cors')
+
+// app
 const app = express()
 app.use(express.json())
 app.use(cors())
 app.use(morgan('tiny'))
 
-// routes
-const BoardController = require('./controllers/board.controller.js')
-const TaskController = require('./controllers/task.controller.js')
+// router
 
-app.post('/board', BoardController.createBoard)
-app.get('/board', BoardController.getAllBoards)
-app.post('/board/:id/task', TaskController.createTask)
+const Board_Router = require('./routers/board.router.js')
+const Task_Router = require('./routers/task.router.js')
+
+app.use('/', Board_Router)
+app.use('/', Task_Router)
 const start = async () => {
 	try {
 		app.listen(8080)

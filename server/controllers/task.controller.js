@@ -3,27 +3,42 @@ const Board = require('../model/board.model.js')
 
 class TaskController {
 	async createTask(req, res) {
-		const id = req.params.id
-		console.log(id)
-		const task = new Task({
-			name: req.body.name,
-			board: id,
-		})
+		try {
+			const id = req.params.id
 
-		await task.save()
-
-		const postRelated = await Board.findById(id)
-
-		postRelated.tasks.push(task)
-
-		await postRelated
-			.save()
-			.then(result => {
-				res.json({ message: 'newBoard created!', result })
+			const task = new Task({
+				name: req.body.name,
+				board: id,
 			})
-			.catch(error => {
-				res.status(500).json({ error })
-			})
+
+			await task.save()
+
+			const postRelated = await Board.findById(id)
+
+			postRelated.tasks.push(task)
+
+			await postRelated
+				.save()
+				.then(() => {
+					res.json({ message: 'newBoard created!', result: task })
+				})
+				.catch(error => {
+					res.status(500).json({ error })
+				})
+		} catch (error) {
+			res.send(error)
+		}
+	}
+
+	async deleteTask(req, res) {
+		try {
+			const { taskId } = req.params
+
+			let removeTask = await Task.findOneAndRemove({ _id: taskId })
+			res.send(removeTask)
+		} catch (error) {
+			res.send(error)
+		}
 	}
 }
 
