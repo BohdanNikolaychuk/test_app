@@ -13,30 +13,69 @@ import {
 	ModalOverlay,
 	Text,
 	useDisclosure,
+	useToast,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { FetchDeleteBoard, FetchPostTask } from '../../store/asyncAction'
-import { useAppDispatch } from '../../store/hooks'
+import { useAppDispatch, useStateSelector } from '../../store/hooks'
 import { IBoards, ITasks } from '../../store/types'
 import { Task } from '../Task/Task'
 
 export const Board = ({ _id, name, createdAt, updatedAt, tasks }: IBoards) => {
 	const dispatch = useAppDispatch()
+	const toast = useToast({
+		position: 'top',
+	})
+	const status = useStateSelector(state => state.board.status)
 	const [input, SetInput] = useState('')
 	const { isOpen, onOpen, onClose } = useDisclosure()
 
-	const createTask = (_id: string) => {
+	const createTask = async (_id: string) => {
 		const newTask = {
 			id: _id,
 			name: input,
 		}
 
-		dispatch(FetchPostTask(newTask))
-		onClose()
+		await dispatch(FetchPostTask(newTask))
+			.unwrap()
+			.then(res => {
+				toast({
+					description: 'You created your task',
+					status: 'success',
+					duration: 4000,
+					isClosable: true,
+				})
+				onClose()
+			})
+			.catch(error => {
+				toast({
+					description: 'Problem with create task',
+					status: 'error',
+					duration: 4000,
+					isClosable: true,
+				})
+			})
 	}
 
-	const deleteBoard = () => {
-		dispatch(FetchDeleteBoard(_id))
+	const deleteBoard = async () => {
+		await dispatch(FetchDeleteBoard(_id))
+			.unwrap()
+			.then(res => {
+				toast({
+					description: 'You deleted your board',
+					status: 'success',
+					duration: 4000,
+					isClosable: true,
+				})
+			})
+			.catch(error => {
+				toast({
+					description: 'Problem with delete task',
+					status: 'error',
+					duration: 4000,
+					isClosable: true,
+				})
+			})
 	}
 
 	const handleSelectInput = (e: React.ChangeEvent<HTMLInputElement>) => {

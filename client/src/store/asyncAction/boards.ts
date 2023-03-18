@@ -6,29 +6,46 @@ import {
 } from '../../services/board.services'
 import { BoardAction } from '../slices'
 
-export const FetchGetBoards = createAsyncThunk('boards/getBoards', async () => {
-	try {
-		const { data } = await getAllBoards()
-		return data
-	} catch (error) {}
-})
+export const FetchGetBoards = createAsyncThunk(
+	'boards/getBoards',
+	async (_, { rejectWithValue }) => {
+		try {
+			const { data } = await getAllBoards()
+			return data
+		} catch (error) {
+			if (error) {
+				return rejectWithValue(error)
+			}
+		}
+	}
+)
 
 export const FetchPostBoard = createAsyncThunk(
 	'boards/createBoard',
-	async (name: string, { dispatch }) => {
+	async (name: string, { dispatch, rejectWithValue }) => {
 		try {
 			const { data } = await createBoard(name)
 			dispatch(BoardAction.addBoard(data.result))
-		} catch (error) {}
+			return data
+		} catch (error) {
+			if (error) {
+				return rejectWithValue(error)
+			}
+		}
 	}
 )
 
 export const FetchDeleteBoard = createAsyncThunk(
 	'boards/deleteBoard',
-	async (id: string, { dispatch }) => {
+	async (id: string, { dispatch, rejectWithValue }) => {
 		try {
 			const { data } = await deleteBoard(id)
 			dispatch(BoardAction.deleteBoard(id))
-		} catch (error) {}
+			return data
+		} catch (error) {
+			if (error) {
+				return rejectWithValue(error)
+			}
+		}
 	}
 )

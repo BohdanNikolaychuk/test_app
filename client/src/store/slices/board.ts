@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { FetchGetBoards } from '../asyncAction/boards'
+import { FetchDeleteTask, FetchPostTask } from '../asyncAction'
+import { FetchDeleteBoard, FetchGetBoards } from '../asyncAction/boards'
 import { State } from '../types'
 
 const initialState: State = {
@@ -51,6 +52,44 @@ const BoardSlice = createSlice({
 				state.boards = action.payload
 			})
 			.addCase(FetchGetBoards.rejected, state => {
+				state.status = 'error'
+			})
+
+			//delete board
+
+			.addCase(FetchDeleteBoard.pending, state => {
+				state.status = 'loading'
+			})
+			.addCase(FetchDeleteBoard.fulfilled, (state, action) => {
+				state.status = 'success'
+			})
+			.addCase(FetchDeleteBoard.rejected, state => {
+				state.status = 'error'
+			})
+
+			//delete task
+
+			.addCase(FetchDeleteTask.pending, state => {
+				state.status = 'loading'
+			})
+
+			.addCase(FetchDeleteTask.fulfilled, state => {
+				state.status = 'success'
+			})
+			.addCase(FetchDeleteTask.rejected, state => {
+				state.status = 'error'
+			})
+
+			//create task
+
+			.addCase(FetchPostTask.pending, state => {
+				state.status = 'loading'
+			})
+
+			.addCase(FetchPostTask.fulfilled, state => {
+				state.status = 'success'
+			})
+			.addCase(FetchPostTask.rejected, state => {
 				state.status = 'error'
 			})
 	},

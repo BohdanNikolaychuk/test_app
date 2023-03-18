@@ -1,4 +1,3 @@
-export { Modal } from '@chakra-ui/react'
 export { Board } from './Board/Board'
 export { Header } from './Header/Header'
 export { Layout } from './Layout/Layout'

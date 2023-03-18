@@ -1,18 +1,35 @@
-import { Box, Button, Text, useDisclosure } from '@chakra-ui/react'
+import {
+	Box,
+	Button,
+	Spinner,
+	Text,
+	useDisclosure,
+	useToast,
+} from '@chakra-ui/react'
 import { useState } from 'react'
 import { Board } from '../../components'
 import { ModalWindow } from '../../components/Modal/Modal'
 import { FetchPostBoard } from '../../store/asyncAction'
 import { useAppDispatch, useStateSelector } from '../../store/hooks'
+
 export const Dashboard = () => {
 	const boards = useStateSelector(state => state.board.boards)
 	const status = useStateSelector(state => state.board.status)
+	const toast = useToast({
+		position: 'top',
+	})
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [input, SetInput] = useState('')
 	const dispatch = useAppDispatch()
 
-	const EmptyBoardsArray = () => {
-		if (!boards.length) {
+	const loading = () => {
+		if (status === 'loading') {
+			return (
+				<Box display='flex' justifyContent='center'>
+					<Spinner />
+				</Box>
+			)
+		} else if (status === 'success' && !boards.length) {
 			return (
 				<Box display='flex' justifyContent='center' pt='4'>
 					<Text fontSize='2xl'>Create your own board</Text>
@@ -21,13 +38,26 @@ export const Dashboard = () => {
 		}
 	}
 
-	if (status === 'loading') {
-		return <>Loading...</>
-	}
-
-	const handleCreateBoard = () => {
-		dispatch(FetchPostBoard(input))
-		onClose()
+	const handleCreateBoard = async () => {
+		await dispatch(FetchPostBoard(input))
+			.unwrap()
+			.then(() => {
+				toast({
+					description: 'You created your board',
+					status: 'success',
+					duration: 4000,
+					isClosable: true,
+				})
+				onClose()
+			})
+			.catch(error => {
+				toast({
+					description: 'Problem with create task',
+					status: 'error',
+					duration: 4000,
+					isClosable: true,
+				})
+			})
 	}
 
 	const handleSelectInput = (text: string) => {
@@ -43,7 +73,7 @@ export const Dashboard = () => {
 			<Button ml={4} onClick={onOpen}>
 				Add New Board
 			</Button>
-			{EmptyBoardsArray()}
+			{loading()}
 			<Box display='flex' flexWrap='nowrap' overflowX='auto'>
 				{boards.map(element => (
 					<Board key={element._id} {...element} />
