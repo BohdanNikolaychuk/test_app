@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { deleteByID } from '../utils'
+import { BASE_URL, deleteByID } from '../utils'
 
 export const createTask = (id: string, name: string) => {
-	return axios.post(`http://localhost:8080/board/${id}/task`, { name })
+	return axios.post(`${BASE_URL}/board/${id}/task`, { name })
 }
 
 export const deleteTask = (taskId: string) => {
