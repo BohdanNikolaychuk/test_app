@@ -26,7 +26,7 @@ class TaskController {
 					res.status(500).json({ error })
 				})
 		} catch (error) {
-			res.send(error)
+			res.send({ error: 'Error' })
 		}
 	}
 
@@ -37,7 +37,7 @@ class TaskController {
 			let removeTask = await Task.findOneAndRemove({ _id: taskId })
 			res.send(removeTask)
 		} catch (error) {
-			res.send(error)
+			res.send({ error: 'Error' })
 		}
 	}
 }

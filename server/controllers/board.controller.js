@@ -14,7 +14,7 @@ class BoardController {
 					res.status(500).json({ error })
 				})
 		} catch (error) {
-			res.send(error)
+			res.send({ error: 'Error' })
 		}
 	}
 	async getAllBoards(req, res) {
@@ -28,7 +28,7 @@ class BoardController {
 					res.status(500).json({ error })
 				})
 		} catch (error) {
-			res.send(error)
+			res.send({ error: 'Error' })
 		}
 	}
 
@@ -41,7 +41,7 @@ class BoardController {
 				res.send(removeDashBoard)
 			})
 		} catch (error) {
-			res.send(error)
+			res.send({ error: 'Error' })
 		}
 	}
 }
