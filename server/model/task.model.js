@@ -5,7 +5,6 @@ const TaskSchema = new mongoose.Schema(
 		name: {
 			type: String,
 			required: true,
-			minlength: 2,
 			trim: true,
 		},
 		board: {

@@ -1,8 +1,8 @@
 import { DeleteIcon } from '@chakra-ui/icons'
 import { Box, Flex, Text, useToast } from '@chakra-ui/react'
 import { FetchDeleteTask } from '../../store/asyncAction/tasks'
-import { useAppDispatch } from '../../store/hooks'
-import { ITasks } from '../../store/types'
+import { useAppDispatch } from '../../store/hooks/redux.hook'
+import { ITasks } from '../../store/types/types'
 import { formateDate } from '../../utils'
 
 export const Task = ({ _id, board, createdAt, name, updatedAt }: ITasks) => {
@@ -13,6 +13,7 @@ export const Task = ({ _id, board, createdAt, name, updatedAt }: ITasks) => {
 	const removeTask = async () => {
 		const reTask = {
 			_id,
+			board,
 		}
 
 		await dispatch(FetchDeleteTask(reTask))

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { FetchDeleteTask, FetchPostTask } from '../asyncAction'
 import { FetchDeleteBoard, FetchGetBoards } from '../asyncAction/boards'
-import { State } from '../types'
+import { State } from '../types/types'
 
 const initialState: State = {
 	boards: [],
@@ -38,6 +38,34 @@ const BoardSlice = createSlice({
 				),
 				1
 			)
+		},
+		sortingTask(state, action) {
+			const findBoard = state.boards.find(
+				element => element._id === action.payload._id
+			)
+			if (!action.payload.sortBy) {
+				findBoard?.tasks.sort((a, b) => {
+					if (new Date(a.createdAt) < new Date(b.createdAt)) {
+						return 1
+					}
+					if (new Date(b.createdAt) < new Date(a.createdAt)) {
+						return -1
+					}
+					return 0
+				})
+			} else {
+				findBoard?.tasks
+					.sort((a, b) => {
+						if (new Date(a.createdAt) < new Date(b.createdAt)) {
+							return 1
+						}
+						if (new Date(b.createdAt) < new Date(a.createdAt)) {
+							return -1
+						}
+						return 0
+					})
+					.reverse()
+			}
 		},
 	},
 	extraReducers: builder => {

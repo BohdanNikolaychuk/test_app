@@ -14,6 +14,7 @@ import ReactDOM from 'react-dom'
 
 type Props = {
 	isOpen: boolean
+	name: 'task' | 'board'
 	onClose: () => void
 	handleInput: (text: string) => void
 	onButtonClick: () => void
@@ -22,6 +23,7 @@ type Props = {
 export const ModalWindow: FC<Props> = ({
 	isOpen,
 	onClose,
+	name,
 	handleInput,
 	onButtonClick,
 }) => {
@@ -34,10 +36,13 @@ export const ModalWindow: FC<Props> = ({
 			<Modal isOpen={isOpen} onClose={onClose} isCentered>
 				<ModalOverlay />
 				<ModalContent>
-					<ModalHeader>What is the board name?</ModalHeader>
+					<ModalHeader>What is the {name} name?</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody>
-						<Input onChange={handleSelectInput} placeholder='Board name' />
+						<Input
+							onChange={handleSelectInput}
+							placeholder={name + ' ' + 'name'}
+						/>
 					</ModalBody>
 					<ModalFooter display='flex' justifyContent='space-around'>
 						<Button onClick={() => onButtonClick()}>Create</Button>

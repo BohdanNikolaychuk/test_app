@@ -39,8 +39,9 @@ export const FetchDeleteBoard = createAsyncThunk(
 	'boards/deleteBoard',
 	async (id: string, { dispatch, rejectWithValue }) => {
 		try {
-			const { data } = await deleteBoard(id)
 			dispatch(BoardAction.deleteBoard(id))
+			const { data } = await deleteBoard(id)
+
 			return data
 		} catch (error) {
 			if (error) {

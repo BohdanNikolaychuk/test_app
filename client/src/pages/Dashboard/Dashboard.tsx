@@ -10,7 +10,7 @@ import { useState } from 'react'
 import { Board } from '../../components'
 import { ModalWindow } from '../../components/Modal/Modal'
 import { FetchPostBoard } from '../../store/asyncAction'
-import { useAppDispatch, useStateSelector } from '../../store/hooks'
+import { useAppDispatch, useStateSelector } from '../../store/hooks/redux.hook'
 
 export const Dashboard = () => {
 	const boards = useStateSelector(state => state.board.boards)
@@ -39,6 +39,15 @@ export const Dashboard = () => {
 	}
 
 	const handleCreateBoard = async () => {
+		if (!input) {
+			toast({
+				description: 'Empty field',
+				status: 'error',
+				duration: 4000,
+				isClosable: true,
+			})
+		}
+
 		await dispatch(FetchPostBoard(input))
 			.unwrap()
 			.then(() => {
@@ -81,6 +90,7 @@ export const Dashboard = () => {
 			</Box>
 
 			<ModalWindow
+				name='board'
 				isOpen={isOpen}
 				onClose={onClose}
 				onButtonClick={handleCreateBoard}
