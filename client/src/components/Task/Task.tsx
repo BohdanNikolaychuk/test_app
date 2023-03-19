@@ -20,7 +20,7 @@ export const Task = ({ _id, board, createdAt, name, updatedAt }: ITasks) => {
 			.unwrap()
 			.then(() => {
 				toast({
-					description: 'You deleted your board',
+					description: 'You deleted your task',
 					status: 'success',
 					duration: 4000,
 					isClosable: true,
