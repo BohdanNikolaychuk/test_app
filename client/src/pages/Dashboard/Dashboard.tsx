@@ -61,7 +61,7 @@ export const Dashboard = () => {
 			})
 			.catch(error => {
 				toast({
-					description: 'Problem with create task',
+					description: 'Problem with create board',
 					status: 'error',
 					duration: 4000,
 					isClosable: true,
